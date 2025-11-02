@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>JobWatch Local</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; max-width: 900px; }
+    h1 { margin-bottom: 0.4rem; }
+    form { display: grid; gap: 0.6rem; margin-bottom: 1.5rem; }
+    label { font-weight: 600; }
+    input, button { padding: 0.6rem; font-size: 1rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ddd; padding: 0.5rem; }
+    th { background: #f5f5f5; text-align: left; }
+    .row { display: grid; grid-template-columns: 1fr 2fr; gap: 0.8rem; }
+    small { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>JobWatch Local</h1>
+  <p>Add a company (for now, only Amazon is supported at run-time). Then click “Run” to email yourself fresh roles.</p>
+
+  <form id="companyForm">
+    <div class="row">
+      <label for="name">Company name</label>
+      <input id="name" name="name" placeholder="Amazon" required />
+    </div>
+    <div class="row">
+      <label for="list_url">Careers/List URL</label>
+      <input id="list_url" name="list_url" placeholder="https://www.amazon.jobs/en/search?category=Software%20Development" required />
+    </div>
+    <div class="row">
+      <label for="role_keywords">Role keywords</label>
+      <input id="role_keywords" name="role_keywords" value="software,developer,engineer" />
+    </div>
+    <div class="row">
+      <label for="max_age_days">Max age (days)</label>
+      <input id="max_age_days" name="max_age_days" type="number" value="7" />
+    </div>
+    <div class="row">
+      <label for="detail_fetch_limit">Detail fetch limit</label>
+      <input id="detail_fetch_limit" name="detail_fetch_limit" type="number" value="40" />
+    </div>
+    <button type="submit">Save company</button>
+  </form>
+
+  <h2>Companies</h2>
+  <table id="companies">
+    <thead><tr><th>ID</th><th>Name</th><th>URL</th><th>Run</th></tr></thead>
+    <tbody>
+      {% for c in companies %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.name }}</td>
+          <td><small>{{ c.list_url }}</small></td>
+          <td><button onclick="runCompany({{ c.id }})">Run</button></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4"><em>No companies yet.</em></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+<script>
+const form = document.getElementById('companyForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const payload = Object.fromEntries(new FormData(form).entries());
+  payload.max_age_days = Number(payload.max_age_days || 7);
+  payload.detail_fetch_limit = Number(payload.detail_fetch_limit || 40);
+  const res = await fetch('/companies', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({detail:res.statusText}));
+    alert('Error: ' + (err.detail || res.statusText));
+  } else {
+    location.reload();
+  }
+});
+
+async function runCompany(id) {
+  const res = await fetch('/run/' + id, { method: 'POST' });
+  const data = await res.json().catch(()=>({}));
+  if (!res.ok) {
+    alert('Run failed: ' + (data.detail || res.statusText));
+  } else {
+    alert('Run OK: ' + JSON.stringify(data));
+  }
+}
+</script>
+
+</body>
+</html>

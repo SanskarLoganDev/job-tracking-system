@@ -2,3 +2,7 @@ functions-framework
 requests
 beautifulsoup4
 lxml
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
