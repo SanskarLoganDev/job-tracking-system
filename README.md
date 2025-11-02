@@ -1,4 +1,5 @@
-🧭 **Job Tracking System – HustleHUB**
+🧭 ***Job Tracking System – HustleHUB***
+
 Track jobs in targeted companies
 
 **Team:**
@@ -10,7 +11,7 @@ Krishnendra Singh Tomar
 
 Sanskar Vidyarthi
 
-📘 Overview
+📘 **Overview**
 The Job Tracking System (HustleHUB) is a cloud-native web application designed to help users manage, filter, and verify job listings efficiently while minimizing fake or misleading postings.
 It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/Sub, Cloud SQL, and Cloud Scheduler for backend automation — and a Vue.js / Vuetify frontend (Google-themed) for an interactive user experience.
 
