@@ -55,19 +55,20 @@ The web interface is styled in Google Material Design, providing:
 job-tracking-system/
 │
 ├── backend/
-│ ├── main.py # Cloud Function entry
+│   ├── main.py               # Cloud Function entry
 │
 ├── static/
-│ ├── index.html # Vue entry point
-│ ├── script.js
-│ ├── style.css
+│   ├── index.html            # Vue entry point
+│   ├── script.js
+│   ├── style.css
 │
 ├── architecture/
-│ ├── diagram.png # Cloud architecture flow
-│ └── mermaid.mmd # Mermaid diagram for documentation
+│   ├── diagram.png           # Cloud architecture flow
+│   └── mermaid.mmd           # Mermaid diagram for documentation
 │
-├── requirements.txt # Python dependencies
-└── README.md # Project documentation
+├── requirements.txt          # Python dependencies
+└── README.md                 # Project documentation
+
 
 ⚙️ Setup Instructions
 1️⃣ Backend Deployment (Google Cloud)
