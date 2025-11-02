@@ -36,14 +36,23 @@ It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/S
   🧱 **Architecture Overview**
   
   [Frontend - HustleHUB (Vue.js)]
+  
   ↓
+  
   [Cloud Function (HTTP Trigger)]
+  
   ↓
+  
   [SMTP Server Topic]
+  
   ↓
+  
   [Firestore]
+  
   ↓
+  
   [Scheduler → Function → SMTP Server → Notification System]
+  
   Data Flow Summary:
 
 1. Frontend calls a Cloud Function (HTTP endpoint).
