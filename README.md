@@ -12,11 +12,13 @@ Krishnendra Singh Tomar
 Sanskar Vidyarthi
 
 📘 **Overview**
+
 The Job Tracking System (HustleHUB) is a cloud-native web application designed to help users manage, filter, and verify job listings efficiently while minimizing fake or misleading postings.
 It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/Sub, Cloud SQL, and Cloud Scheduler for backend automation — and a Vue.js / Vuetify frontend (Google-themed) for an interactive user experience.
 
-🌐 Key Features
-🎯 Core Functionality
+🌐 **Key Features**
+
+🎯 _**Core Functionality**_
 
 - Job Listing & Tracking: Users can browse, filter, and track job applications easily.
 - Fake Listing Detection: Filters misleading job postings using internal validation workflows.
@@ -29,7 +31,10 @@ It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/S
   Cloud Functions (HTTP Trigger) Executes logic to fetch, validate, and store job postings.
   SMTP Server Handles asynchronous messaging between services.
   Firestore Provides real-time sync for frontend components.
-  🧱 Architecture Overview
+
+  
+  🧱 **Architecture Overview**
+  
   [Frontend - HustleHUB (Vue.js)]
   ↓
   [Cloud Function (HTTP Trigger)]
