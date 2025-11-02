@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # HustleHUB – JobWatch (Local)
 
 Lightweight, local-first job watcher to **track a company’s careers page** and **email you fresh roles**—no third-party job boards, no cloud bill. This hackathon build currently supports **Amazon (amazon.jobs)** end-to-end; the code and data model are structured to add more companies next.
@@ -6,93 +5,32 @@ Lightweight, local-first job watcher to **track a company’s careers page** and
 ---
 
 # Team
-=======
-🧭 **Job Tracking System – HustleHUB**
-
-Track jobs in targeted companies
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 Abhigna Kandala
 Krishnendra Tomar
 Heena Khan
 Sanskar Vidyarthi
 
-<<<<<<< HEAD
 ## 🧩 Problem Statement
 
 Targeted job hunting is tedious: you must repeatedly check specific companies’ career pages, apply keyword filters, and figure out which postings are actually **new**. Job boards add noise, and many teams publish roles only on their own site.
 
 **We want a simple, no-cost tool** that:
-=======
-📘 **Overview**
-
-The Job Tracking System (HustleHUB) is a cloud-native web application designed to help users manage, filter, and verify job listings efficiently while minimizing fake or misleading postings.
-It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/Sub, Cloud SQL, and Cloud Scheduler for backend automation — and a Vue.js / Vuetify frontend (Google-themed) for an interactive user experience.
-
-🌐 **Key Features**
-
-🎯 _**Core Functionality**_
-
-- Job Listing & Tracking: Users can browse, filter, and track job applications easily.
-- Fake Listing Detection: Filters misleading job postings using internal validation workflows.
-- Automated Status Updates: Sends notifications or reminders about job status via Pub/Sub triggers.
-- Search & Filtering: Search jobs by title, company, category, or posting date.
-- Secure Data Flow: Uses Secret Manager and IAM policies for secure credentials and configuration.
-  ☁️ GCP Integrations
-  Service Purpose
-  Cloud Scheduler Automates backend triggers to check new job data.
-  Cloud Functions (HTTP Trigger) Executes logic to fetch, validate, and store job postings.
-  SMTP Server Handles asynchronous messaging between services.
-  Firestore Provides real-time sync for frontend components.
-
-  
-  🧱 **Architecture Overview**
-  
-  [Frontend - HustleHUB (Vue.js)]
-  
-  ↓
-  
-  [Cloud Function (HTTP Trigger)]
-  
-  ↓
-  
-  [SMTP Server Topic]
-  
-  ↓
-  
-  [Firestore]
-  
-  ↓
-  
-  [Scheduler → Function → SMTP Server → Notification System]
-  
-  Data Flow Summary:
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 * Stores companies & their careers URLs locally,
 * Pulls job postings directly from those pages,
 * Filters by role keywords and **recently posted**,
 * Emails a clean summary to you.
 
-<<<<<<< HEAD
 ---
-=======
-💻 **Frontend (Vue)**
-
-The web interface is styled in Google Material Design, providing:
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 ## ✅ Our Solution
 
-<<<<<<< HEAD
 * **Backend:** FastAPI app with a small **SQLite** database (SQLAlchemy).
 * **Frontend:** A minimal HTML/CSS page (no framework) to add companies and trigger runs.
 * **Scraper:** Requests + BeautifulSoup tuned to **amazon.jobs** (with date extraction & age filtering).
 * **Email:** SMTP (e.g., Gmail with App Password) sends you an HTML table of fresh roles.
 * **Config via `.env`:** SMTP creds + recipient email; no secrets in code.
-=======
-📦 **Project Structure**
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 > For the hackathon scope, the live scraper is implemented for **Amazon**. The DB & scraper plumbing are extensible so you can add parsers for other career sites next.
 
@@ -100,7 +38,6 @@ The web interface is styled in Google Material Design, providing:
 
 ## 🏗️ Architecture (Local)
 
-<<<<<<< HEAD
 ```
 ┌────────────┐     POST /companies           ┌─────────────┐
 │ Frontend   │ ───────────────────────────▶  │  FastAPI    │
@@ -121,19 +58,10 @@ The web interface is styled in Google Material Design, providing:
                                                              │
                                           .env (SMTP + recipient)
 ```
-=======
-⚙️ **Setup Instructions**
-
-1️⃣ _**Backend Deployment (Google Cloud)**_
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 ---
 
-<<<<<<< HEAD
 ## 📁 Project Structure
-=======
-2️⃣ _**Frontend Setup**_
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 ```
 .
@@ -147,31 +75,13 @@ The web interface is styled in Google Material Design, providing:
     └─ script.js           # (optional) UI helpers if used
 ```
 
-<<<<<<< HEAD
 > `jobs.db` (SQLite) is created at runtime in the project root.
 
 ---
-=======
-🧠 **Tech Stack**
-
-Layer Technology
-Frontend Vue.js + Vuetify + Pinia + Axios
-Backend Python (Flask/Cloud Function)
-Database Google Cloud SQL (MySQL/PostgreSQL)
-Messaging SMTP Server
-Deployment Firebase Hosting
-Storage Firestore
-
-🔐 **Security and Compliance**
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 ## 🔧 Setup & Run
 
-<<<<<<< HEAD
 ### 1) Python env
-=======
-🚀 **Future Enhancements**
->>>>>>> f612fd36fab4b9b0ea2a88e8e4d2e39e9bbb5e84
 
 ```bash
 # macOS/Linux
