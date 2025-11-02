@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HustleHUB – Login & Company Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div>
+      <span>H</span><span>u</span><span>s</span><span>t</span><span>l</span><span>e</span><span>HUB</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <form class="card" onsubmit="handleSubmit(event)">
+      <h2>Welcome to HustleHUB</h2>
+
+      <div class="section-title">Login</div>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+
+      <button type="button" class="btn" onclick="alert('Login successful!')">Sign In</button>
+
+      <div class="divider"></div>
+
+      <div class="section-title">Company Details</div>
+
+      <label for="company">Company Name</label>
+      <input type="text" id="company" placeholder="Enter company name" required>
+
+      <label for="postdays">Post Days</label>
+      <input type="number" id="postdays" placeholder="Max post age in days" required>
+
+      <label for="careers">Careers URL</label>
+      <input type="url" id="careers" placeholder="https://example.com/careers" required>
+
+      <label for="keywords">Keywords</label>
+      <input type="text" id="keywords" placeholder="e.g. software, backend, devops">
+
+      <label for="location">Location</label>
+      <input type="text" id="location" placeholder="e.g. US-Remote">
+
+      <label for="contactEmail">Contact Email</label>
+      <input type="email" id="contactEmail" placeholder="company@email.com">
+
+      <button type="submit" class="btn">Submit</button>
+    </form>
+  </main>
+
+  <footer>
+    © 2025 HustleHUB • Google-inspired Design (Roboto + Material)
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
