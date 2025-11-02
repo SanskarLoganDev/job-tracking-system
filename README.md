@@ -1,4 +1,4 @@
-🧭 ***Job Tracking System – HustleHUB***
+🧭 **Job Tracking System – HustleHUB**
 
 Track jobs in targeted companies
 
@@ -52,7 +52,8 @@ It leverages Google Cloud Platform (GCP) services such as Cloud Functions, Pub/S
 4. Cloud Scheduler triggers validation routines at scheduled intervals.
 5. Email/Notification Service sends updates to users (via Gmail API / SendGrid / SMTP).
 
-💻 Frontend (Vue + Vuetify)
+💻 **Frontend (Vue)**
+
 The web interface is styled in Google Material Design, providing:
 
 - Clean cards for job listings.
@@ -60,14 +61,15 @@ The web interface is styled in Google Material Design, providing:
 - Login and tracking dashboards.
 - Responsive design and animations using Vuetify components.
 
-📦 Project Structure
+📦 **Project Structure**
 
 <img width="808" height="404" alt="image" src="https://github.com/user-attachments/assets/77f0de8f-7815-4c4b-9a3d-ebdadbaa3bc8" />
 
 
 
-⚙️ Setup Instructions
-1️⃣ Backend Deployment (Google Cloud)
+⚙️ **Setup Instructions**
+
+1️⃣ _**Backend Deployment (Google Cloud)**_
 
 1. Enable the required GCP APIs:gcloud services enable cloudfunctions.googleapis.com pubsub.googleapis.com sqladmin.googleapis.com
 2.
@@ -82,7 +84,7 @@ The web interface is styled in Google Material Design, providing:
 11.
 12. Set environment variables or use Secret Manager for DB credentials.
 
-2️⃣ Frontend Setup
+2️⃣ _**Frontend Setup**_
 
 1. Navigate to the frontend folder:cd frontend
 2. npm install
@@ -92,7 +94,8 @@ The web interface is styled in Google Material Design, providing:
 6. For production build:npm run build
 7.
 
-🧠 Tech Stack
+🧠 **Tech Stack**
+
 Layer Technology
 Frontend Vue.js + Vuetify + Pinia + Axios
 Backend Python (Flask/Cloud Function)
@@ -101,13 +104,13 @@ Messaging SMTP Server
 Deployment Firebase Hosting
 Storage Firestore
 
-🔐 Security and Compliance
+🔐 **Security and Compliance**
 
 - Secrets managed with Google Secret Manager.
 - IAM roles restricted by Principle of Least Privilege.
 - Data encrypted in transit (HTTPS) and at rest (Cloud SQL AES-256).
 
-🚀 Future Enhancements
+🚀 **Future Enhancements**
 
 - Integrate AI-based job verification using Vertex AI.
 - Add User Dashboard for tracking application progress.
