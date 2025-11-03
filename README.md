@@ -71,9 +71,8 @@ Targeted job hunting is tedious: you must repeatedly check specific companies’
 ├─ .env.example            # Sample environment variables (copy to .env)
 ├─ templates/
 │   └─ index.html          # UI to add companies and trigger runs
-└─ static/
-    ├─ styles.css          # UI styles
-    └─ script.js           # (optional) UI helpers if used
+└─ function/
+    └─ main.py           # the code for cloud function
 ```
 
 > `jobs.db` (SQLite) is created at runtime in the project root.
@@ -213,6 +212,163 @@ Visit: `http://127.0.0.1:8000/`
   Use `POST /companies/reset` or delete the row via your UI flow.
 
 ---
+
+Here’s a **clean Cloud section** you can paste into your README (it replaces the earlier Pub/Sub content). It assumes **Cloud Scheduler → HTTPS Cloud Function (2nd gen)** every **10 minutes**.
+
+---
+
+## ☁️ Cloud Deployment (GCP) – Scheduler ➜ Cloud Function (HTTP, every 10 min)
+
+Make the app hands-off in the cloud: **Cloud Scheduler** hits your **HTTP Cloud Function** every 10 minutes; the function reads active companies (Firestore/Datastore, if you use it), scrapes, and emails you fresh roles.
+
+### Cloud Architecture
+
+```
+         (every 10 minutes)
+ Cloud Scheduler  ──────────────▶  Cloud Functions (2nd gen, HTTP)
+                                        │
+                                        │  requests + BeautifulSoup
+                                        ▼
+                                   Company Sites
+                                        │
+                                        ▼
+                              SMTP (Gmail / SES / SendGrid)
+                                   Email summary
+
+                  ┌─────────────────────────────────────────┐
+                  │ Firestore (Datastore mode) — optional   │
+                  │   • Store companies & settings          │
+                  │   • Function reads/filter by “active”   │
+                  └─────────────────────────────────────────┘
+
+                  ┌─────────────────────────────────────────┐
+                  │ Secret Manager — recommended            │
+                  │   • SMTP_USER / SMTP_PASS / …           │
+                  │   • RECIPIENT_EMAIL                     │
+                  └─────────────────────────────────────────┘
+```
+
+### One-Time Setup
+
+> Replace `$PROJECT_ID`, `$REGION` (e.g., `us-central1`), and emails. Run in **Cloud Shell** or your terminal (with `gcloud`).
+
+1. **Enable APIs**
+
+```bash
+gcloud config set project $PROJECT_ID
+gcloud services enable cloudfunctions.googleapis.com cloudscheduler.googleapis.com \
+  firestore.googleapis.com secretmanager.googleapis.com
+```
+
+2. **(Optional) Firestore (Datastore mode)**
+   If you want a cloud DB of companies (same shape as local), create Firestore:
+
+```bash
+gcloud firestore databases create --region=$REGION
+```
+
+Add docs (GUI or code) like:
+
+```json
+{
+  "name": "Amazon",
+  "list_url": "https://www.amazon.jobs/en/search?category=Software%20Development",
+  "role_keywords": "software,developer,engineer",
+  "max_age_days": 7,
+  "detail_fetch_limit": 40,
+  "active": true
+}
+```
+
+3. **Secrets (recommended)**
+
+```bash
+echo -n "yourname@gmail.com" | gcloud secrets create SMTP_USER --data-file=-
+echo -n "abcd efgh ijkl mnop" | gcloud secrets create SMTP_PASS --data-file=-  # Gmail App Password (16 chars)
+echo -n "smtp.gmail.com"     | gcloud secrets create SMTP_HOST --data-file=-
+echo -n "587"                | gcloud secrets create SMTP_PORT --data-file=-
+echo -n "you@example.com"    | gcloud secrets create RECIPIENT_EMAIL --data-file=-
+```
+
+4. **Deploy the Cloud Function (2nd gen, HTTP)**
+
+> Use your function **entry point name** (e.g., `scan_jobs_test` or whatever your handler is called).
+
+```bash
+gcloud functions deploy jobwatch-scan \
+  --gen2 \
+  --runtime=python312 \
+  --region=$REGION \
+  --entry-point=scan_jobs_test \
+  --trigger-http \
+  --allow-unauthenticated=false \
+  --set-secrets=SMTP_USER=SMTP_USER:latest,SMTP_PASS=SMTP_PASS:latest,SMTP_HOST=SMTP_HOST:latest,SMTP_PORT=SMTP_PORT:latest,RECIPIENT_EMAIL=RECIPIENT_EMAIL:latest \
+  --set-env-vars=PYTHONUNBUFFERED=1
+```
+
+Grant the function’s **service account** access to Firestore (if used) and Secrets:
+
+```bash
+SA="$(gcloud functions describe jobwatch-scan --gen2 --region $REGION --format='value(serviceConfig.serviceAccountEmail)')"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SA" \
+  --role="roles/datastore.user"
+
+for S in SMTP_USER SMTP_PASS SMTP_HOST SMTP_PORT RECIPIENT_EMAIL; do
+  gcloud secrets add-iam-policy-binding $S \
+    --member="serviceAccount:$SA" \
+    --role="roles/secretmanager.secretAccessor"
+done
+```
+
+5. **Create a Scheduler job (every 10 minutes)**
+
+* Create a Scheduler **service account** and allow it to invoke your function:
+
+```bash
+gcloud iam service-accounts create scheduler-sa --display-name="Scheduler SA"
+
+# 2nd gen CFs use Cloud Run-style invoker for HTTP
+gcloud functions add-iam-policy-binding jobwatch-scan \
+  --gen2 --region=$REGION \
+  --member="serviceAccount:scheduler-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+  --role="roles/run.invoker"
+```
+
+* Get the function URL and create the job:
+
+```bash
+FUNC_URL="$(gcloud functions describe jobwatch-scan --gen2 --region $REGION --format='value(serviceConfig.uri)')"
+
+gcloud scheduler jobs create http jobwatch-10min \
+  --schedule="*/10 * * * *" \
+  --uri="$FUNC_URL" \
+  --http-method=POST \
+  --oidc-service-account-email="scheduler-sa@$PROJECT_ID.iam.gserviceaccount.com" \
+  --oidc-token-audience="$FUNC_URL"
+```
+
+### Smoke Test
+
+* In **Cloud Functions** UI, copy the **URI** and run:
+
+```bash
+curl -X POST "$FUNC_URL"
+```
+
+* Or in **Cloud Scheduler**, click **Run now**.
+* Check **Cloud Logging** for run output and your inbox for the email.
+
+### Troubleshooting
+
+* **403 Forbidden**: The Scheduler SA likely lacks `roles/run.invoker` on the function. Re-run the IAM binding command above.
+* **Secrets not loading**: Ensure the function SA has `roles/secretmanager.secretAccessor` on each secret.
+* **SMTP auth failed**: For Gmail, enable **2-Step Verification** and use a **16-char App Password** (not your normal password).
+* **No jobs**: Some sites are JS-heavy or block bots; Amazon path here uses JSON + HTML fallbacks. Increase `detail_fetch_limit` or relax `max_age_days`.
+
+---
+
 
 ## 🚧 Limitations (Hackathon scope)
 
