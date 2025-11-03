@@ -1,4 +1,5 @@
 # HustleHUB – JobWatch (Local)
+# TRACK - Productivity and Automation
 
 Lightweight, local-first job watcher to **track a company’s careers page** and **email you fresh roles**—no third-party job boards, no cloud bill. This hackathon build currently supports **Amazon (amazon.jobs)** end-to-end; the code and data model are structured to add more companies next.
 
